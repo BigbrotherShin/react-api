@@ -38,7 +38,7 @@ function reducer(state, action) {
 // 이 Hook 에서 반환하는 값은 요청 관련 상태와, fetchData 함수입니다.
 // 이렇게 fetchData 함수를 반환하여서 나중에 데이터를 쉽게 리로딩을 해줄 수 있습니다.
 
-function useAsync(callback, deps = []) {
+function useAsync(callback, deps = [], skip = false) {
   const [state, dispatch] = useReducer(reducer, {
     loading: false,
     data: null,
@@ -56,6 +56,9 @@ function useAsync(callback, deps = []) {
   }, [callback]);
 
   useEffect(() => {
+    if (skip) {
+      return;
+    }
     fetchData();
     // eslint-disable-next-line
   }, deps)
