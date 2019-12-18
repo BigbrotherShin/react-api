@@ -6,22 +6,23 @@ function Users() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const fetchUsers = async () => {
+    try {
+      setUsers(null);
+      setError(null);
+      setLoading(true);
+      const response = await axios.get(
+        'https://jsonplaceholder.typicode.com/users',
+      );
+      setUsers(response.data); // response.data로 결과 조회
+    } catch (e) {
+      console.error(e.response.status);
+      setError(e);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setUsers(null);
-        setError(null);
-        setLoading(true);
-        const response = await axios.get(
-          'https://jsonplaceholder.typicode.com/users',
-        );
-        setUsers(response.data); // response.data로 결과 조회
-      } catch (e) {
-        console.error(e.response.status);
-        setError(e);
-      }
-      setLoading(false);
-    };
     fetchUsers();
   }, []);
 
@@ -30,13 +31,16 @@ function Users() {
   if (!users) return null;
 
   return (
-    <ul>
-      {users.map(user => (
-        <li key={user.id}>
-          {user.username} ({user.name})
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>
+            {user.username} ({user.name})
+          </li>
+        ))}
+      </ul>
+      <button onClick={fetchUsers}>Reloading</button>
+    </>
   );
 }
 
