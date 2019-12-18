@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import useAsync from './useAsync';
+import { useAsync } from 'react-async';
 import User from './User';
 import styled, { css } from 'styled-components';
 
@@ -20,15 +20,17 @@ async function getUsers() {
   return response.data;
 }
 
+// 렌더링하는 시점이 아닌 사용자의 특정 인터랙션(클릭으로 로딩 등)에 따라 API 를 호출하고 싶을 땐
+// promiseFn 대신 deferFn 을 사용하고, reload 대신 run 함수를 사용
 function Users() {
-  const [state, refetch] = useAsync(getUsers, [], true);
   const [userId, setUserId] = useState(null);
+  const { data: users, error, isLoading, reload, /*reload*/run } = useAsync({
+    /*promiseFn*/deferFn: getUsers
+  });
 
-  const { loading, data: users, error } = state;
-
-  if (loading) return <div>LOADING..</div>;
+  if (isLoading) return <div>LOADING..</div>;
   if (error) return <div>ERROR!!!</div>;
-  if (!users) return <button onClick={refetch}>불러오기</button>;
+  if (!users) return <button onClick={/*reload*/run}>불러오기</button>;
 
   return (
     <>
@@ -39,7 +41,7 @@ function Users() {
           </UserList>
         ))}
       </ul>
-      <button onClick={refetch}>Reloading</button>
+      <button onClick={reload}>Reloading</button>
       { userId && <User id={userId} />}
     </>
   );
