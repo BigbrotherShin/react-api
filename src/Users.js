@@ -23,6 +23,7 @@ function Users() {
 
   const fetchData = () => {
     getUsers(dispatch);
+    setUserId(null);
   };
 
   if (loading) return <div>LOADING..</div>;
@@ -48,4 +49,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default React.memo(Users);
