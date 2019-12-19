@@ -130,6 +130,7 @@ export async function getUser(dispatch, id) {
     dispatch({
       type: 'GET_USER_SUCCESS',
       data: response.data,
+      id
     });
   } catch (e) {
     dispatch({ type: 'GET_USER_ERROR', error: e });
