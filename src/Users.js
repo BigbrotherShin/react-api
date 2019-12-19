@@ -7,9 +7,11 @@ const UserList = styled.li`
   &:hover {
     cursor: pointer;
   }
-  &:active {
-    font-weight: bold;
-  }
+  ${props =>
+    props.check &&
+    css`
+      font-weight: bold;
+    `}
 `;
 
 function Users() {
@@ -31,13 +33,17 @@ function Users() {
     <>
       <ul>
         {users.map(user => (
-          <UserList key={user.id} onClick={() => setUserId(user.id)}>
+          <UserList
+            check={userId === user.id}
+            key={user.id}
+            onClick={() => setUserId(userId === user.id ? null : user.id)}
+          >
             {user.username} ({user.name})
           </UserList>
         ))}
       </ul>
       <button onClick={fetchData}>Reloading</button>
-      { userId && <User id={userId} />}
+      {userId && <User id={userId} />}
     </>
   );
 }
